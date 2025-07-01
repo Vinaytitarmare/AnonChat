@@ -13,6 +13,9 @@ export default {
       },
     },
   },
-  plugins: [require("flowbite/plugin")], // ✅ Add Flowbite plugin
+  plugins: [
+     require("flowbite/plugin"),
+    require("tailwind-scrollbar-hide"),
+  ], // ✅ Add Flowbite plugin
 }
 

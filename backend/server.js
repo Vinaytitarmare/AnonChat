@@ -76,15 +76,15 @@ app.post("/api/signup", async(req,res)=>{
 // room creation page
 app.post("/api/createRoom", async(req,res)=>{
     try{
-        const {roomName,roomDes,roomId}=req.body;
+        const {roomName,roomDes,roomId,password}=req.body;
         const isexist=await roomDetails.findOne({roomId});
         if(isexist)
         {
           return res.json({success:false,message:"Room Id already taken!!"})
         }
-    const details=new roomDetails({roomName,roomDes,roomId})
+    const details=new roomDetails({roomName,roomDes,roomId, password: password || undefined})
     await details.save();
-    res.json({success:true,message:"done"})
+    res.json({success:true,message:"Room Created!"})
     }
     catch(e){
         console.log(e)
@@ -113,6 +113,27 @@ app.get("/api/checkRoom", async(req,res)=>{
     }
     else{
        res.json({status:false,message:"Room Id not found!!"})
+    }
+
+  }
+  catch(e){
+    console.log("server error",e)
+    res.json({status:0, message:"server error"})
+  }
+})
+
+app.get("/api/checkPassword", async(req,res)=>{
+  try{
+    const{roomId}=req.query;
+    const isExist=await roomDetails.findOne({roomId})
+    const data=await isExist
+    if(
+      !data.password)
+    {
+      return res.json({ispassword:"no"})
+    }
+    else{
+      return res.json({ispassword:"yes",password:data.password})
     }
 
   }

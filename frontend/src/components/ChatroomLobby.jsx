@@ -20,6 +20,8 @@ const ChatroomLobby = () => {
   const [roomName, setRoomName] = useState("");
   const [roomDes, setroomDes] = useState("");
   const [roomId, setRoomId] = useState("");
+  const [roomPass, setRoomPass] = useState("");
+
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -35,7 +37,7 @@ const ChatroomLobby = () => {
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/createRoom`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ roomName, roomDes, roomId })
+      body: JSON.stringify({ roomName, roomDes, roomId,password: roomPass  })
     });
     const data=await response.json()
     if (!data.status) {
@@ -43,6 +45,8 @@ const ChatroomLobby = () => {
       setRoomName("");
     setRoomId("");
     setroomDes("");
+     setRoomPass("");
+      handleClose();
     } else {
       alert("room created!");
     handleClose();
@@ -122,75 +126,86 @@ const ChatroomLobby = () => {
       </main>
 
       {/* Modal */}
-     <Modal open={open} onClose={handleClose}>
-  <div className="relative w-[90%] max-w-md mx-auto my-8 p-6 bg-[#111] text-white rounded-xl shadow-2xl border border-[#00ff9d]">
-    
-    {/* ❌ Close Button */}
-    <button
-      onClick={handleClose}
-      className="absolute top-4 right-4 text-[#00ff9d] hover:text-[#00ffe5] text-xl font-bold focus:outline-none transition-all"
-      aria-label="Close"
-    >
-      &times;
-    </button>
+      <Modal open={open} onClose={handleClose}>
+    {/* <div className="relative w-[90%] max-w-md mx-auto my-8 p-6 bg-[#111] text-white rounded-xl shadow-2xl border border-[#00ff9d]"> */}
+     <div className="relative w-[90%] max-w-md mx-auto my-8 max-h-[90vh] overflow-y-auto p-6 bg-[#111] text-white rounded-xl shadow-2xl border border-[#00ff9d] scrollbar-hide">
+ 
+      {/* ❌ Close Button */}
+      <button
+        onClick={handleClose}
+        className="absolute top-4 right-4 text-[#00ff9d] hover:text-[#00ffe5] text-xl font-bold focus:outline-none transition-all"
+        aria-label="Close"
+      >
+        &times;
+      </button>
 
-    <div className="mb-6 text-center">
-      <div className="mx-auto flex items-center justify-center w-16 h-16 bg-black rounded-full mb-4">
-        <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-        </svg>
+      <div className="mb-6 text-center">
+        <div className="mx-auto flex items-center justify-center w-16 h-16 bg-black rounded-full mb-4">
+          <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+        </div>
+        <h2 className="text-2xl font-bold mb-2">Create Secret Room</h2>
+        <p className="text-sm text-gray-400">Your conversation stays anonymous</p>
       </div>
-      <h2 className="text-2xl font-bold mb-2">Create Secret Room</h2>
-      <p className="text-sm text-gray-400">Your conversation stays anonymous</p>
-    </div>
 
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Room Name</label>
-        <input
-          type="text"
-          value={roomName}
-          onChange={(e) => setRoomName(e.target.value)}
-          className="w-full px-4 py-3 bg-[#111] border border-[#00ff9d] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ff9d]"
-          placeholder="e.g. Tech Enthusiasts"
-          required
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Description</label>
-        <textarea
-          value={roomDes}
-          onChange={(e) => setroomDes(e.target.value)}
-          className="w-full px-4 py-3 bg-[#111] border border-[#00ff9d] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ff9d]"
-          placeholder="What's this room about?"
-          rows="3"
-          required
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Room ID</label>
-        <div className="relative">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-1">Room Name</label>
           <input
-            type="number"
-            value={roomId}
-            onChange={(e) => setRoomId(e.target.value)}
+            type="text"
+            value={roomName}
+            onChange={(e) => setRoomName(e.target.value)}
             className="w-full px-4 py-3 bg-[#111] border border-[#00ff9d] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ff9d]"
-            placeholder="unique-room-id"
+            placeholder="e.g. Tech Enthusiasts"
             required
           />
         </div>
-      </div>
-      <div className="pt-4">
-        <button
-          type="submit"
-          className="w-full py-3 px-4 bg-gradient-to-r from-[#00ff9d] to-[#00ffe5] hover:from-green-500 hover:to-teal-500 text-black font-medium rounded-lg shadow-md transition duration-300"
-        >
-          Create Room
-        </button>
-      </div>
-    </form>
-  </div>
-</Modal>
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-1">Description</label>
+          <textarea
+            value={roomDes}
+            onChange={(e) => setroomDes(e.target.value)}
+            className="w-full px-4 py-3 bg-[#111] border border-[#00ff9d] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ff9d]"
+            placeholder="What's this room about?"
+            rows="3"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-1">Room ID</label>
+          <div className="relative">
+            <input
+              type="number"
+              value={roomId}
+              onChange={(e) => setRoomId(e.target.value)}
+              className="w-full px-4 py-3 bg-[#111] border border-[#00ff9d] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ff9d]"
+              placeholder="unique-room-id"
+              required
+            />
+          </div>
+        </div>
+        <div>
+  <label className="block text-sm font-medium text-gray-300 mb-1">Room Password (optional)</label>
+  <input
+    type="password"
+    value={roomPass}
+    onChange={(e) => setRoomPass(e.target.value)}
+    className="w-full px-4 py-3 bg-[#111] border border-[#00ff9d] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ff9d]"
+    placeholder="Set a password (optional)"
+  />
+</div>
+        <div className="pt-4">
+          <button
+            type="submit"
+            className="w-full py-3 px-4 bg-gradient-to-r from-[#00ff9d] to-[#00ffe5] hover:from-green-500 hover:to-teal-500 text-black font-medium rounded-lg shadow-md transition duration-300"
+          >
+            Create Room
+          </button>
+        </div>
+      </form>
+    </div>
+  </Modal>
 
     </div>
   );
