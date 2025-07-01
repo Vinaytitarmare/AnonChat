@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes scaleIn {
+    from { transform: translate(-50%, -50%) scale(0.95); opacity: 0; }
+    to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 200ms ease-out;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 200ms ease-out;
+  }
+  @keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.pulse-animation {
+  animation: pulse 2s infinite;
+}
+/* Ensure all interactive elements are clickable */
+button, [role="button"] {
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+  z-index: 10;
+}
+
+/* Prevent any parent from blocking clicks */
+.click-through {
+  pointer-events: none;
+}
+
+/* Debugging class to visualize clickable areas */
+.debug-click {
+  outline: 2px solid red !important;
+}
