@@ -10,7 +10,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("http://192.168.56.1:5000/api/signup", {
+    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, password }),

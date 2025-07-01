@@ -64,7 +64,7 @@ const formatTime = (timestamp) => {
     setMessageInput(""); // Clear input
   };
 const check_roomid=async(roomId)=>{
-   const isExist=await fetch(`http://192.168.56.1:5000/api/checkRoom?roomId=${roomId}`,
+   const isExist=await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/checkRoom?roomId=${roomId}`,
      {
             method:"GET",
              headers: { "Content-Type": "application/json" }

@@ -1,8 +1,11 @@
-// src/socket.js
 import { io } from "socket.io-client";
 
-const socket = io("http://192.168.56.1:5000", {
-  transports: ["websocket"], // ensures persistent connection
+const socket = io(import.meta.env.VITE_BACKEND_URL, {
+
+  transports: ["websocket"],
+  withCredentials: true,
 });
+console.log("Socket connecting to:", import.meta.env.VITE_BACKEND_URL);
+
 
 export default socket;
