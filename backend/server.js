@@ -12,7 +12,7 @@ const bodyParser = require("body-parser");
 app.use(cors());
 app.use(bodyParser.json());
 const roomDetails=require("../backend/model/roomDetails")
-
+const Admin=require("../backend/model/admin")
 
 // const MONGO_URL="mongodb+srv://anonymous_user:123@cluster0.ryyih.mongodb.net/Anonymous_Chatroom?retryWrites=true&w=majority&appName=Cluster0"
 const MONGO_URL=process.env.MONGO_URL
@@ -29,6 +29,32 @@ app.post("/api/login", async(req,res)=>{
     
     try{
         const user=await User.findOne({name,password})
+        console.log(user)
+        if(user)
+        {   const token=jwt.sign({},Secret_Key,{expiresIn:"2h"});
+        console.log(token)
+            res.json({ success: true, message: "Login successful",username:name, tokenn:token });
+    }
+            
+        else{
+            res.json({ success: false, message: "Login failed" });
+        }
+    
+    }
+    catch(e){
+         console.error("Login error:", e);
+         res.status(500).json({ success: 0, message: "Server error" });
+
+    }
+});
+
+// Admin Login //no signing for admin
+app.post("/api/admin_login", async(req,res)=>{
+    const {name,password}=req.body;
+    console.log(name,password)
+    
+    try{
+        const user=await Admin.findOne({name,password})
         console.log(user)
         if(user)
         {   const token=jwt.sign({},Secret_Key,{expiresIn:"2h"});
@@ -91,6 +117,25 @@ app.post("/api/createRoom", async(req,res)=>{
         
     }
 })
+
+// handleDelete
+app.delete("/api/delete", async(req,res)=>{
+    try{
+      const {roomId}=req.query;
+      
+      const deleteroom=await roomDetails.findOneAndDelete({roomId: (roomId)});
+     if(deleteroom) res.json({status:true,message:"Room deleted successfuly!"})
+      else{
+    res.json({status:false,message:"Unable to delete Room due to internal issue!!"})}
+    }
+    catch(e){
+      console.log(e)
+      res.json({status:false,message:"Unable to delete Room due to server issue!!"})
+        
+        
+    }
+})
+
 // call all the rooms
 app.get("/api/getRooms",async(req,res)=>{
    try{

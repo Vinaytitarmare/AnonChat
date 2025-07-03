@@ -1,6 +1,6 @@
 const mongoose=require("mongoose") 
 
-const roomDetails=new mongoose.Schema(
+const roomDetail=new mongoose.Schema(
     {
         roomName:{type:String, required:true},
         roomDes:{type:String, required:true},
@@ -8,4 +8,4 @@ const roomDetails=new mongoose.Schema(
         password: { type: String, required: false },
     }
 )
-module.exports=mongoose.model("roomDetails",roomDetails)
+module.exports=mongoose.model("roomDetails",roomDetail)

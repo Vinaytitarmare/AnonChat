@@ -119,7 +119,20 @@ const check_roomid=async(roomId)=>{
 <div className="fixed inset-0 bg-black text-gray-100 flex flex-col">
   {/* Header with glowing accent */}
   <header className="border-b border-gray-800 bg-gradient-to-r from-black to-gray-900 p-4 flex items-center">
-    <div className="flex-1">
+        <button
+  onClick={() => window.history.back()}
+  className=" inline-flex items-center  ml-[-10px] px-1 py-1 bg-gray-800 text-white rounded-full hover:bg-gray-700 transition-all duration-200 font-mono text-sm"
+>
+  <svg
+    className="w-4 h-4"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+  </svg>
+ 
+</button><div className="flex-1 ml-3">
       <h1 className="text-2xl font-mono font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-cyan-400">
         ANONYMOUS CHATROOM
       </h1>
