@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 require('dotenv').config();
-const path = require('path');
+// const path = require('path');
 const User = require("./model/user"); //import model from this
 const app=express()
 const PORT = process.env.PORT || 5000;
@@ -22,7 +22,16 @@ mongoose.connect(MONGO_URL)
  .then(() => console.log("MongoDB connected"))
   .catch(err => console.error("MongoDB connection error:", err));
 
- 
+const path = require('path');
+
+// Serve static files from Vite's dist folder
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+// Serve index.html for any non-API route
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+});
+
 
 // login routes
 app.post("/api/login", async(req,res)=>{
