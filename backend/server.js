@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 require('dotenv').config();
-
+const path = require('path');
 const User = require("./model/user"); //import model from this
 const app=express()
 const PORT = process.env.PORT || 5000;
@@ -21,6 +21,8 @@ const Secret_Key="vinay_123"
 mongoose.connect(MONGO_URL)
  .then(() => console.log("MongoDB connected"))
   .catch(err => console.error("MongoDB connection error:", err));
+
+ 
 
 // login routes
 app.post("/api/login", async(req,res)=>{
