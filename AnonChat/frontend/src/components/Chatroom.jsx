@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import socket from "./socket";
 import { useLocation } from "react-router-dom";
+import { useRef } from "react"; // already using hooks
+
 const Chatroom = () => {
+  const messagesEndRef = useRef(null);
+
   const { roomId } = useParams();
  const [validate,validater]=useState("true")
   const [searchParams] = useSearchParams();
@@ -15,6 +19,11 @@ const [username, setUsername] = useState("Anonymous"); // Initialize with defaul
   }, [location.state]);
   const [messages, setMessages] = useState([]); // For message history
   const [messageInput, setMessageInput] = useState(""); // For input field
+useEffect(() => {
+  if (messagesEndRef.current) {
+    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+  }
+}, [messages]);
 
 // color regenerate karne ke liye
 // Generate sharp neon colors for users
@@ -37,25 +46,46 @@ const formatTime = (timestamp) => {
   return new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
 
-  useEffect(() => {
-    socket.emit("join-room", roomId);
+useEffect(() => {
+  socket.emit("join-room", roomId);
 
-    socket.on("message-history", (history) => {
-      setMessages(history);
-    });
+  // Load chat history and mark your messages
+  socket.on("message-history", (history) => {
+    const updatedHistory = history.map(msg => ({
+      ...msg,
+      isCurrentUser: msg.sender === username
+    }));
+    setMessages(updatedHistory);
+  });
 
-    socket.on("receive-message", (msg) => {
-      setMessages(prev => [...prev, msg]);
-    });
+  // Handle new incoming messages
+socket.on("receive-message", (msg) => {
+  // Avoid adding the message again if it was sent by this client
+  if (msg.sender === username) return;
 
-    return () => {
-      socket.off("message-history");
-      socket.off("receive-message");
-    };
-  }, [roomId]);
+  setMessages(prev => [...prev, { ...msg, isCurrentUser: false }]);
+});
+
+  // Cleanup to prevent memory leaks
+  return () => {
+    socket.off("message-history");
+    socket.off("receive-message");
+  };
+}, [roomId, username]); // ✅ Include `username` in dependency array
+
 
   const sendMessage = () => {
+
     if (!messageInput.trim()) return;
+    // adds new msg instantly
+    const newMsg = {
+    message: messageInput,
+    sender: username,
+    timestamp: Date.now(),
+    isCurrentUser: true
+  };
+
+  setMessages(prev => [...prev, newMsg]);
     socket.emit("send-message", { 
       roomId, 
       message: messageInput,  // Fixed property name
@@ -143,17 +173,15 @@ const check_roomid=async(roomId)=>{
 
   {/* Full-screen message container with subtle grid pattern */}
   <div className="flex-1 overflow-y-auto p-4 bg-black bg-opacity-90 bg-[radial-gradient(#111_1px,transparent_1px)] [background-size:16px_16px]">
-    {messages.map((msg, i) => (
+    { messages.map((msg, i) => (
       <div 
         key={i} 
         className={`mb-4 flex ${msg.isCurrentUser ? 'justify-end' : 'justify-start'}`}
       >
         <div className={`max-w-[80%] rounded-lg p-3 ${getUserColor(msg.sender)}`}>
-          {!msg.isCurrentUser && (
-            <div className="text-xs font-mono mb-1 opacity-70">
-              {msg.sender || 'ANON#' + Math.abs(msg.senderId).toString(16).slice(0,4)}
-            </div>
-          )}
+          <div className="text-xs font-mono mb-1 opacity-70">
+  {msg.isCurrentUser ? 'You' : (msg.sender || 'Anonymous')}
+</div>
           <div className="text-sm">{msg.message}</div>
           <div className={`text-xs mt-1 ${msg.isCurrentUser ? 'text-right' : 'text-left'} opacity-50`}>
             {formatTime(msg.timestamp)}
@@ -161,6 +189,8 @@ const check_roomid=async(roomId)=>{
         </div>
       </div>
     ))}
+    <div ref={messagesEndRef} />
+
   </div>
 
   {/* Input area with sci-fi vibe */}
@@ -207,7 +237,7 @@ const check_roomid=async(roomId)=>{
 </div>
 
     )
- }
+}
 
 
 };

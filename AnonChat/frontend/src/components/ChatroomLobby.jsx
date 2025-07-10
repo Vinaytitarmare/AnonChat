@@ -10,6 +10,7 @@ const ChatroomLobby = () => {
   const fetchRooms = async () => {
     const rooms = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/getRooms`);
     const data = await rooms.json();
+    console.log("rooms fetched",data)
     setfetchedRoom(data.message);
   };
 
