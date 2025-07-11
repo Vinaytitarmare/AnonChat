@@ -24,7 +24,6 @@ useEffect(() => {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   }
 }, [messages]);
-
 // color regenerate karne ke liye
 // Generate sharp neon colors for users
 const getUserColor = (senderId) => {
