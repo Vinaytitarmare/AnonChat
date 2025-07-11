@@ -1,8 +1,4 @@
-Below is the complete README file for the repository Vinaytitarmare/AnonChat:
 
-------------------------------------------------------------
-README.md
-------------------------------------------------------------
 # AnonChat
 
 ## Introduction
